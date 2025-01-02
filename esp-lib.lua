@@ -5,9 +5,6 @@ local Players = game:GetService("Players")
 
 local Player = Players.LocalPlayer
 
-local Character = Player.Character or Player.CharacterAdded:Wait()
-local Root: BasePart = Character:WaitForChild("HumanoidRootPart")
-
 local GPSs = {}
 
 function EspLib:CreateEsp(Active, Part, Text, Color)
@@ -38,7 +35,15 @@ function EspLib:CreateEsp(Active, Part, Text, Color)
 			DL.TextStrokeTransparency = .8
 
 			RunService.RenderStepped:Connect(function()
-				DL.Text = math.round((Part.Position - Root.Position).Magnitude) .. "s"
+				local Character = Player.Character
+				if Character then
+					local Root: BasePart = Character:FindFirstChild("HumanoidRootPart")
+					if Root then
+						DL.Text = math.round((Part.Position - Root.Position).Magnitude) .. "s"
+						return
+					end
+				end
+				DL.Text = "???"
 			end)
 
 			table.insert(GPSs, GPS)
