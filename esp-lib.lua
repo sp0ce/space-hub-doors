@@ -43,6 +43,20 @@ function EspLib:CreateEsp(Active, Part, Text, Color)
 			Line.BackgroundColor3 = Color
 
 			RunService.RenderStepped:Connect(function()
+				local PointA = Camera.ViewportSize / 2
+				local PointB, InView = Camera:WorldToScreenPoint(Part.Position)
+
+				local Distance = math.sqrt(math.pow(PointA.X - PointB.X, 2) + math.pow(PointA.Y - PointB.Y, 2))
+				local Center = Vector2.new((PointA.X + PointB.X)/2, (PointA.Y + PointB.Y)/2)	
+				local Rotation = math.atan2(PointA.Y - PointB.Y, PointA.X - PointB.X)
+				
+				----------------------------------------------------------------------------------------------------------------
+				
+				Line.Position = UDim2.new(0, Center.X, 0, Center.Y)
+				Line.Rotation = math.deg(Rotation)
+				Line.Size = UDim2.new(0, Distance, 0, 2)
+				Line.Visible = InView
+				
 				local Character = Player.Character
 				if Character then
 					local Root: BasePart = Character:FindFirstChild("HumanoidRootPart")
@@ -52,20 +66,6 @@ function EspLib:CreateEsp(Active, Part, Text, Color)
 					end
 				end
 				DL.Text = "???"
-				
-				----------------------------------------------------------------------------------------------------------------
-				
-				local PointA = Camera.ViewportSize / 2
-				local PointB, InView = Camera:WorldToScreenPoint(Part.Position)
-
-				local Distance = math.sqrt(math.pow(PointA.X - PointB.X, 2) + math.pow(PointA.Y - PointB.Y, 2))
-				local Center = Vector2.new((PointA.X + PointB.X)/2, (PointA.Y + PointB.Y)/2)	
-				local Rotation = math.atan2(PointA.Y - PointB.Y, PointA.X - PointB.X)
-
-				Line.Position = UDim2.new(0, Center.X, 0, Center.Y)
-				Line.Rotation = math.deg(Rotation)
-				Line.Size = UDim2.new(0, Distance, 0, 2)
-				Line.Visible = InView
 			end)
 			
 			GPS.Destroying:Once(function()
