@@ -7,6 +7,7 @@ local Player = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
 local LinesGui = Instance.new("ScreenGui", Player.PlayerGui)
+LinesGui.DisplayOrder = -1000
 LinesGui.Name = "LinesGui"
 
 local GPSs = {}
@@ -41,20 +42,19 @@ function EspLib:CreateEsp(Active, Part, Text, Color)
 			local Line = Instance.new("Frame", LinesGui)
 			Line.AnchorPoint = Vector2.new(.5, .5)
 			Line.BackgroundColor3 = Color
+			Line.BorderSizePixel = 0
 
 			RunService.RenderStepped:Connect(function()
-				local PointA = Camera.ViewportSize / 2
+				local PointA = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y)
 				local PointB, InView = Camera:WorldToScreenPoint(Part.Position)
 
 				local Distance = math.sqrt(math.pow(PointA.X - PointB.X, 2) + math.pow(PointA.Y - PointB.Y, 2))
-				local Center = Vector2.new((PointA.X + PointB.X)/2, (PointA.Y + PointB.Y)/2)	
+				local Center = Vector2.new(PointA.X + PointB.X, PointA.Y + PointB.Y) / 2
 				local Rotation = math.atan2(PointA.Y - PointB.Y, PointA.X - PointB.X)
-				
-				----------------------------------------------------------------------------------------------------------------
 				
 				Line.Position = UDim2.new(0, Center.X, 0, Center.Y)
 				Line.Rotation = math.deg(Rotation)
-				Line.Size = UDim2.new(0, Distance, 0, 2)
+				Line.Size = UDim2.new(0, Distance, 0, 1)
 				Line.Visible = InView
 				
 				local Character = Player.Character
